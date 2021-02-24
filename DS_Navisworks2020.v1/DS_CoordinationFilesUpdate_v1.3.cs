@@ -11,7 +11,7 @@ using System.Collections.Generic;
 
 namespace DS_NWClass
 {
-    [Plugin("DS_CoordinationFilesUpdate_v1.2", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.2")]
+    [Plugin("DS_CoordinationFilesUpdate_v1.3", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.3")]
 
     public class NWC_Assembly_Plugin : AddInPlugin
 
@@ -39,9 +39,12 @@ namespace DS_NWClass
         {
             FileSize = FileSizeOut;
             FileDate = FileDateOut;
+            //create NavisworksApplication automation object
+            Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
+               new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
 
             //Intiating main process
-            DirIterate(FolderPathNWC, FolderPathNWD);
+            DirIterate(FolderPathNWC, FolderPathNWD, automationApplication);
 
             if (File.Exists(LogPath(CurDateTime)) == true)
             {
@@ -53,16 +56,9 @@ namespace DS_NWClass
             MessageBox.Show("Done!");
         }
 
-        public void DirIterate(string DirPathNWC, string DirPathNWD)
+        public void DirIterate(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
         {
-            //create NavisworksApplication automation object
-            Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
-               new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
-
-            //var _name = new List<string> { "архив" };
-            //string[] NewDir = Directory.GetDirectories(DirPathNWC);
-
-
+           
             string[] NewDir = Directory.EnumerateDirectories(DirPathNWC, "*_*_*_*_*", SearchOption.AllDirectories).ToArray();
 
             try
@@ -98,9 +94,9 @@ namespace DS_NWClass
                             if (Directory.Exists(NWDDir) == false)
                             {
                                 Directory.CreateDirectory(NWDDir);
-                            }
+                            } 
 
-                            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);
+                            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);                            
 
                             Archiving(NWDDir, FileNameNWD);
                         }
