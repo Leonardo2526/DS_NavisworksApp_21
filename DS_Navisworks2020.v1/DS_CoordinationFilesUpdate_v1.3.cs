@@ -4,6 +4,9 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using System.Threading;
+using System.Threading.Tasks;
+
 
 //User spaces
 using DS_Space;
@@ -56,6 +59,29 @@ namespace DS_NWClass
             MessageBox.Show("Done!");
         }
 
+       void InitiateFileOperations(string ZeroIndEl, string[] FilesList, string DirPathNWD, string dirName, string FileNameNWD)
+        {
+            Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
+              new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
+
+            string NWDDir = DirPathNWD + "\\" + dirName + "\\";
+            if (Directory.Exists(NWDDir) == false)
+            {
+                Directory.CreateDirectory(NWDDir);
+            }
+
+            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);
+
+            Archiving(NWDDir, FileNameNWD); 
+        }
+
+
+        async void InitiateFileOperationsAsync(string ZeroIndEl, string[] FilesList, string DirPathNWD, string dirName, string FileNameNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
+        {
+            await Task.Run(() => InitiateFileOperations(ZeroIndEl, FilesList, DirPathNWD, dirName, FileNameNWD));
+        }
+
+
         public void DirIterate(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
         {
            
@@ -87,6 +113,12 @@ namespace DS_NWClass
                         {
                             //disable progress whilst we do this procedure
                             automationApplication.DisableProgress();
+                            automationApplication.OpenFile(ZeroIndEl, FilesList);
+
+                            InitiateFileOperationsAsync(ZeroIndEl, FilesList, DirPathNWD, dirName, FileNameNWD, automationApplication);
+                            /*
+                            //disable progress whilst we do this procedure
+                            automationApplication.DisableProgress();
 
                             automationApplication.OpenFile(ZeroIndEl, FilesList);
 
@@ -99,6 +131,8 @@ namespace DS_NWClass
                             automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);                            
 
                             Archiving(NWDDir, FileNameNWD);
+                            */
+                            
                         }
 
                     
