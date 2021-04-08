@@ -75,9 +75,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoordinationFilesUpdate.cs" />
+    <Compile Include="DS_ClashResultsTable.cs" />
     <Compile Include="DS_Space.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="DS_ViewpointsReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
