@@ -34,6 +34,12 @@ namespace DS_ClashReport
             //Name of input file
             OpenFileDialogForm_1 opFile = new OpenFileDialogForm_1();
             string FilePathTxt = opFile.OpenFileDialogForm().ToString();
+            if (FilePathTxt == "")
+            {
+                opFile.Close();
+                return;
+            }
+
             string newDirName = "";
 
             //Files pathes reading
@@ -48,6 +54,10 @@ namespace DS_ClashReport
                 {
                     OpenFolder opFold = new OpenFolder();
                     newDirName = opFold.OpenFolderDialogForm() + ((char)92).ToString();
+                    if (newDirName == "")
+                    {
+                        return;
+                    }
                 }
 
 
