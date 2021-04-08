@@ -15,7 +15,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace DS_ClashReport
 {
-    [Plugin("DS_ClashReport_v4", "DS", ToolTip = "Clash results status output", DisplayName = "DS_ClashReport_v4")]
+    [Plugin("DS_ClashResultsTable_v4.1", "DS", ToolTip = "Clash results status output", DisplayName = "DS_ClashResultsTable_v4.1")]
 
     public class ClashResultsTable : AddInPlugin
     {
@@ -389,7 +389,7 @@ namespace DS_ClashReport
                         {
                             field1 += GetFileName.Substring(ind[i - 1], ind[i] - ind[i - 1]);
                         }
-                        else if (n[i] == 4)
+                        else if (n[i] == 5)
                         {
                             field2 += GetFileName.Substring(ind[i - 1], ind[i] - ind[i - 1] - 1);
                         }

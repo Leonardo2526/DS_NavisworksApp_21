@@ -74,7 +74,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DS_ClashReport_v4.cs" />
+    <Compile Include="DS_ClashResultsTable.cs" />
     <Compile Include="DS_CoordinationFilesUpdate_v1.3.cs" />
     <Compile Include="DS_Space.cs">
       <SubType>Form</SubType>
