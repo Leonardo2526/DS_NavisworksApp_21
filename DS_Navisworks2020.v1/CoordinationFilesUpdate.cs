@@ -39,7 +39,7 @@ namespace DS_NWClass
         {
             FileSize = FileSizeOut;
             FileDate = FileDateOut;
-            //create NavisworksApplication automation object
+            //create NavisworksApplication automation objects
             Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
                new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
 
