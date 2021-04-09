@@ -11,9 +11,6 @@ using System.IO;
 using System.Diagnostics;
 
 using Autodesk.Navisworks.Api;
-using Autodesk.Navisworks.Api.Interop.ComApi;
-using Autodesk.Navisworks.Api.Plugins;
-using ComApiBridge = Autodesk.Navisworks.Api.ComApi.ComApiBridge;
 
 namespace DS_Space
 {
@@ -282,41 +279,7 @@ namespace DS_Space
 
         }
       
-        public void HomeViewpoint_Set(out InwOpView oSV)
-        //Get home viewpoint, reset appearences and set as current viewpoint
-        {
-            Document oDoc = Autodesk.Navisworks.Api.Application.ActiveDocument;
-
-            //Reset appearences
-            oDoc.Models.ResetAllPermanentMaterials();
-            oDoc.Models.ResetAllHiddenToModelState();
-            oDoc.SetGraduatedBackground(Autodesk.Navisworks.Api.Color.FromByteRGB(105,140,230),
-                Autodesk.Navisworks.Api.Color.FromByteRGB(210, 240, 255));
-
-            //Set properties for home view
-            Viewpoint oVP = new Viewpoint
-            {
-                //Set quaternion for home view
-                Rotation = new Rotation3D(0.425, 0.176, 0.340, 0.821),
-                Projection = ViewpointProjection.Perspective,
-                RenderStyle = ViewpointRenderStyle.Shaded
-            };
-          
-            Autodesk.Navisworks.Api.Application.ActiveDocument.CurrentViewpoint.CopyFrom(oVP);
-
-
-            // Get a hold of the state object (it is a singleton)
-            InwOpState10 myState = ComApiBridge.State;
-
-            //Set viewpoint to all model
-            myState.ViewAll();
-
-            // create a temporary saved viewpoint
-            oSV = myState.ObjectFactory(nwEObjectType.eObjectType_nwOpView);
-
-            //Set viewpoint
-            oSV.anonview.ViewPoint = myState.CurrentView.ViewPoint.Copy();
-        }
+       
     }
 
 

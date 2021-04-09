@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DS_NWClass
 {
-    [Plugin("DS_CoordinationFilesUpdate_v1.4", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.4")]
+    [Plugin("DS_CoordinationFilesUpdate_v1.3", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.3")]
 
     public class NWC_Assembly_Plugin : AddInPlugin
 
@@ -40,35 +40,32 @@ namespace DS_NWClass
         {
             FileSize = FileSizeOut;
             FileDate = FileDateOut;
-            //create NavisworksApplication automation objects  
+            //create NavisworksApplication automation objects 
             Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication = null;
 
             //Intiating main process
 
+            //Task task = DirIterate(FolderPathNWC, FolderPathNWD, automationApplication);
 
-            Task task = DirIterateAsync(FolderPathNWC, FolderPathNWD, automationApplication);
-              
-        }
+            DirIterate(FolderPathNWC, FolderPathNWD, automationApplication);
 
-        private async Task EndTaskAsync()
-        {
-            await Task.Run(() =>
-            {
-                if (File.Exists(LogPath(CurDateTime)) == true)
+            if (File.Exists(LogPath(CurDateTime)) == true)
                 {
                     MessageBox.Show("Process has been stoped because errors occured!" + "\n" + "Log saved: " + LogPath(CurDateTime));
                     Clipboard.SetText(LogPath(CurDateTime));
                     return;
                 }
-                MessageBox.Show("Done!");
-            });
+
+                MessageBox.Show("Done!"); 
         }
 
         void InitiateFileOperations(string ZeroIndEl, string[] FilesList, string DirPathNWD, string dirName, string FileNameNWD)
         {
-            //create NavisworksApplication automation object 
+            //create NavisworksApplication automation object
             Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
                new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
+            //disable progress whilst we do this procedure 
+            //automationApplication.DisableProgress();  
 
             automationApplication.OpenFile(ZeroIndEl, FilesList);
 
@@ -78,12 +75,25 @@ namespace DS_NWClass
                 Directory.CreateDirectory(NWDDir);
             }
 
-            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);
+            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD); 
+
+
+
+            //Re-enable progress
+            //automationApplication.EnableProgress(); 
 
             Archiving(NWDDir, FileNameNWD);
+
+           
         }
 
-        public async Task DirIterateAsync(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
+        private async Task InitiateFileOperationsAsync(string ZeroIndEl, string[] FilesList, string DirPathNWD, string dirName, string FileNameNWD)
+        {
+            await Task.Run(() => InitiateFileOperations(ZeroIndEl, FilesList, DirPathNWD, dirName, FileNameNWD));
+        }
+
+
+        public async Task DirIterate(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
         {
 
             string[] NewDir = Directory.EnumerateDirectories(DirPathNWC, "*_*_*_*_*", SearchOption.AllDirectories).ToArray();
@@ -148,8 +158,6 @@ namespace DS_NWClass
                 LogWriter(ex.ToString(), CurDateTime);
                 return;
             }
-
-            await EndTaskAsync();
         }
 
         public string[] GetFilesList(string d, FileInfo[] fiArr, out string ZeroIndEl, string[] FilesList)

@@ -45,17 +45,9 @@
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Clash.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Autodesk.Navisworks.ComApi">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.ComApi.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="Autodesk.Navisworks.Controls">
       <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Controls.dll</HintPath>
       <Private>False</Private>
-    </Reference>
-    <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
-      <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -75,11 +67,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CoordinationFilesUpdate.cs" />
-    <Compile Include="DS_ClashResultsTable.cs" />
     <Compile Include="DS_Space.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DS_ViewpointsReport.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
