@@ -8,10 +8,11 @@ using System.Windows.Forms;
 //User spaces
 using DS_Space;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace DS_NWClass
 {
-    [Plugin("DS_CoordinationFilesUpdate_v1.3", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.3")]
+    [Plugin("DS_CoordinationFilesUpdate_v1.4", "DS", ToolTip = "NWC files assembling to NWD", DisplayName = "DS_CoordinationFilesUpdate_v1.4")]
 
     public class NWC_Assembly_Plugin : AddInPlugin
 
@@ -39,35 +40,61 @@ namespace DS_NWClass
         {
             FileSize = FileSizeOut;
             FileDate = FileDateOut;
-            //create NavisworksApplication automation objects
+            //create NavisworksApplication automation objects   
+            Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication = null;
+
+            //Intiating main process
+
+
+            Task task = DirIterateAsync(FolderPathNWC, FolderPathNWD, automationApplication);
+
+        }
+
+        private async Task EndTaskAsync()
+        {
+            await Task.Run(() =>
+            {
+                if (File.Exists(LogPath(CurDateTime)) == true)
+                {
+                    MessageBox.Show("Process has been stoped because errors occured!" + "\n" + "Log saved: " + LogPath(CurDateTime));
+                    Clipboard.SetText(LogPath(CurDateTime));
+                    return;
+                }
+                MessageBox.Show("Done!");
+            });
+        }
+
+        void InitiateFileOperations(string ZeroIndEl, string[] FilesList, string DirPathNWD, string dirName, string FileNameNWD)
+        {
+            //create NavisworksApplication automation object 
             Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication =
                new Autodesk.Navisworks.Api.Automation.NavisworksApplication();
 
-            //Intiating main process
-            DirIterate(FolderPathNWC, FolderPathNWD, automationApplication);
+            automationApplication.OpenFile(ZeroIndEl, FilesList);
 
-            if (File.Exists(LogPath(CurDateTime)) == true)
+            string NWDDir = DirPathNWD + "\\" + dirName + "\\";
+            if (Directory.Exists(NWDDir) == false)
             {
-                MessageBox.Show("Process has been stoped because errors occured!" + "\n" + "Log saved: " + LogPath(CurDateTime));
-                Clipboard.SetText(LogPath(CurDateTime));
-                return;
+                Directory.CreateDirectory(NWDDir);
             }
 
-            MessageBox.Show("Done!");
+            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);
+
+            Archiving(NWDDir, FileNameNWD);
         }
 
-        public void DirIterate(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
+        public async Task DirIterateAsync(string DirPathNWC, string DirPathNWD, Autodesk.Navisworks.Api.Automation.NavisworksApplication automationApplication)
         {
-           
-            string[] NewDir = Directory.EnumerateDirectories(DirPathNWC, "*_*_*_*_*", SearchOption.AllDirectories).ToArray();
 
+            string[] NewDir = Directory.EnumerateDirectories(DirPathNWC, "*_*_*_*_*", SearchOption.AllDirectories).ToArray();
+            int i = 0;
             try
             {
                 //Get folders
                 foreach (string d in NewDir)
                 {
-                   
-                    // Make a reference to info of a directory.  
+                    i++;
+                    // Make a reference to info of a directory.     
                     DirectoryInfo di = new DirectoryInfo(d);
 
                     // Get a reference to each file in that directory.
@@ -85,23 +112,33 @@ namespace DS_NWClass
 
                         if (ZeroIndEl != "")
                         {
-                            //disable progress whilst we do this procedure
-                            automationApplication.DisableProgress();
 
-                            automationApplication.OpenFile(ZeroIndEl, FilesList);
-
-                            string NWDDir = DirPathNWD + "\\" + dirName + "\\";
-                            if (Directory.Exists(NWDDir) == false)
+                            try
                             {
-                                Directory.CreateDirectory(NWDDir);
-                            } 
+                                await Task.Run(() => InitiateFileOperations(ZeroIndEl, FilesList, DirPathNWD, dirName, FileNameNWD));
 
-                            automationApplication.SaveFile(NWDDir + "\\" + FileNameNWD);                            
-
-                            Archiving(NWDDir, FileNameNWD);
+                            }
+                            catch (Autodesk.Navisworks.Api.Automation.AutomationException e)
+                            {
+                                //An error occurred, display it to the user
+                                System.Windows.Forms.MessageBox.Show("Error: " + e.Message);
+                            }
+                            catch (Autodesk.Navisworks.Api.Automation.AutomationDocumentFileException e)
+                            {
+                                //An error occurred, display it to the user
+                                System.Windows.Forms.MessageBox.Show("Error: " + e.Message);
+                            }
+                            finally
+                            {
+                                if (automationApplication != null)
+                                {
+                                    automationApplication.Dispose();
+                                    automationApplication = null;
+                                }
+                            }
                         }
 
-                    
+
                     }
 
                 }
@@ -111,12 +148,14 @@ namespace DS_NWClass
                 LogWriter(ex.ToString(), CurDateTime);
                 return;
             }
+
+            await EndTaskAsync();
         }
 
         public string[] GetFilesList(string d, FileInfo[] fiArr, out string ZeroIndEl, string[] FilesList)
         {
-            var ext = new List<string> { "nwc"};
-            
+            var ext = new List<string> { "nwc" };
+
             //List forming only from nwc files
             FilesList = Directory.EnumerateFiles(d, "*.*", SearchOption.AllDirectories).
                 Where(s => ext.Contains(Path.GetExtension(s).TrimStart((char)46).ToLowerInvariant())).ToArray();
@@ -146,7 +185,7 @@ namespace DS_NWClass
                 }
             }
 
-            
+
 
 
             //Check if correct models present in directory
@@ -169,7 +208,7 @@ namespace DS_NWClass
 
             // Get a reference to each file in that directory.
             FileInfo[] fiArr = di.GetFiles();
-            
+
             //Check directory
             if (fiArr.Length != 0 && Directory.Exists(ArchiveDir) == false)
             {
