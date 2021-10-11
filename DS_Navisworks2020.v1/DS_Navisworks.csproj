@@ -7,8 +7,8 @@
     <ProjectGuid>{12AE8213-C4E7-4D55-911F-F15D688C9E97}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DS_NW_2020_PluginsAssembly</RootNamespace>
-    <AssemblyName>DS_NW_2020_PluginsAssembly</AssemblyName>
+    <RootNamespace>DS_NW_2021_PluginsAssembly</RootNamespace>
+    <AssemblyName>DS_NW_2021_PluginsAssembly</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -34,27 +34,22 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autodesk.Navisworks.Api">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Api.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.Api.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Automation">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Automation.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.Automation.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Clash">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Clash.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.Clash.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.ComApi">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.ComApi.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.ComApi.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Controls">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Controls.dll</HintPath>
-      <Private>False</Private>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.Navisworks.Interop.ComApi">
-      <HintPath>C:\Program Files\Autodesk\Navisworks Manage 2020\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Program Files\Autodesk\Navisworks Manage 2021\Autodesk.Navisworks.Interop.ComApi.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
@@ -89,7 +84,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "C:\Program Files\Autodesk\Navisworks Manage 2020\Plugins\$(TargetName)\" rmdir /S /Q "C:\Program Files\Autodesk\Navisworks Manage 2020\Plugins\$(TargetName)\"
-xcopy /Y "$(TargetDir)*.*" "C:\Program Files\Autodesk\Navisworks Manage 2020\Plugins\$(TargetName)\"</PostBuildEvent>
+    <PostBuildEvent>IF EXIST "C:\Program Files\Autodesk\Navisworks Manage 2021\Plugins\$(TargetName)\" rmdir /S /Q "C:\Program Files\Autodesk\Navisworks Manage 2021\Plugins\$(TargetName)\"
+xcopy /Y "$(TargetDir)*.*" "C:\Program Files\Autodesk\Navisworks Manage 2021\Plugins\$(TargetName)\"</PostBuildEvent>
   </PropertyGroup>
 </Project>
